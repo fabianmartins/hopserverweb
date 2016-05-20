@@ -108,7 +108,7 @@ public class HopServlet extends HttpServlet {
 	private String getNextLayerResponse(String[] serverlist) {
 		StringBuffer result = new StringBuffer();
 		String serverToCall = serverlist[0].trim();
-		String urlToCall = "http://" + serverToCall + "/HopDescribeApp/hop";
+		String urlToCall = "http://" + serverToCall + "/hopserver/hop";
 		result.append("\n\n## NEXT LAYER : " + urlToCall + "\n");
 		String newServerList;
 		if (serverlist.length > 1) {
@@ -118,7 +118,7 @@ public class HopServlet extends HttpServlet {
 		} else
 			newServerList = "";
 		try {
-			result.append(doRequest(urlToCall, new String[][] { { "serverlist", newServerList } })).append("\n");
+			result.append(doPostRequest(urlToCall, new String[][] { { "serverlist", newServerList } })).append("\n");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -126,13 +126,14 @@ public class HopServlet extends HttpServlet {
 	}
 
 	/**
+	 * Submits a POST request.
 	 * 
-	 * @param url
-	 * @param parameters
-	 * @return
+	 * @param url Server to be called.
+	 * @param parameters Parameters to be send in the post.
+	 * @return Server response.
 	 * @throws IOException
 	 */
-	protected String doRequest(String url, String[][] parameters) throws IOException {
+	private String doPostRequest(String url, String[][] parameters) throws IOException {
 		StringBuffer result = new StringBuffer();
 		StringBuffer encodedParameters = new StringBuffer();
 		for (int i = 0; i < parameters.length; i++)
